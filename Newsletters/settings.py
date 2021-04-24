@@ -38,8 +38,8 @@ ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS', default=[]))
 # Application definition
 
 INSTALLED_APPS = [
+    'tags_app.apps.TagsAppConfig',
     'newsletter_app.apps.NewsletterAppConfig',
-    'admin_app.apps.AdminAppConfig',
     'users_app.apps.UsersAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
