@@ -38,6 +38,7 @@ ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS', default=[]))
 # Application definition
 
 INSTALLED_APPS = [
+    'newsletter_app.apps.NewsletterAppConfig',
     'admin_app.apps.AdminAppConfig',
     'users_app.apps.UsersAppConfig',
     'django.contrib.admin',
@@ -139,3 +140,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ]
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
