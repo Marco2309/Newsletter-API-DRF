@@ -5,8 +5,8 @@ from users_app.models import User
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name',
-                  'last_name',  'is_administrador')
+        fields = ('id', 'username', 'email', 'first_name',
+                  'last_name', 'is_active')
 
 
 class CreateUserSerializer(ModelSerializer):
