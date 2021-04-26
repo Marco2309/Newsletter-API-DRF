@@ -7,3 +7,7 @@ class Tag(models.Model):
     fecha_creacion = models.DateTimeField()
     created_at = models.DateTimeField()
     update_at = models.DateTimeField()
+
+    def __str__(self):
+        return self.nombre
+    

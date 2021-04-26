@@ -7,7 +7,7 @@ class Newsletters(models.Model):
     nombre = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     imagen = models.ImageField(upload_to='imagenes', null=True)
-    target = models.IntegerField
+    target = models.IntegerField()
     frecuencia = models.CharField(max_length=50)
     tags = models.ManyToManyField(Tag, related_name='newsletters')
     user = models.ForeignKey(User, related_name='user',

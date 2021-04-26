@@ -3,10 +3,11 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.conf import settings
 from django.conf.urls.static import static
-
+from users_app.views import verifyLogin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('verify/', verifyLogin),
     path('user/', include('users_app.urls')),
     path('tags/', include('tags_app.urls')),
     path('newsletter/', include('newsletter_app.urls')),
