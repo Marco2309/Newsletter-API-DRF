@@ -13,5 +13,5 @@ class Newsletters(models.Model):
     user = models.ForeignKey(User, related_name='user',
                              on_delete=models.SET_NULL, null=True)
     fecha_creacion = models.DateField()
-    created_at = models.DateTimeField()
-    update_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now_add=True)
