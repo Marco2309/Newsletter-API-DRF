@@ -1,4 +1,4 @@
-from newsletter_app.serializer import Newsletters, NewsletterSerializer
+from newsletter_app.serializer import Newsletters, NewsletterSerializer, DetailNewsletterSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -20,3 +20,8 @@ class NewslettersViewSet(ModelViewSet):
         tags = newsletter.tags.all()
         serialized = TagSerializer(tags, many=True)
         return Response(status=status.HTTP_200_OK, data=serialized.data)
+    
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action == 'retrieve':
+            return DetailNewsletterSerializer
+        return NewsletterSerializer

@@ -8,3 +8,11 @@ class NewsletterSerializer(ModelSerializer):
     class Meta:
         model = Newsletters
         fields = '__all__'
+
+
+class DetailNewsletterSerializer(ModelSerializer):
+    user = UserSerializer()
+    tags = TagSerializer(many=True)
+    class Meta: 
+        model = Newsletters
+        fields = '__all__'
