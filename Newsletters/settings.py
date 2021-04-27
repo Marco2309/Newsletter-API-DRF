@@ -40,7 +40,7 @@ ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS', default=[]))
 INSTALLED_APPS = [
     'tags_app.apps.TagsAppConfig',
     'newsletter_app.apps.NewsletterAppConfig',
-    'users_app.apps.UsersAppConfig',
+    # 'users_app.apps.UsersAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,7 +130,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'users_app.User'
+# AUTH_USER_MODEL = 'users_app.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

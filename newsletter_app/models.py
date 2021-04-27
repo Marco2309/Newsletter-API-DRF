@@ -1,6 +1,6 @@
 from django.db import models
 from tags_app.models import Tag
-from users_app.models import User
+from django.contrib.auth.models import User
 
 
 class Newsletters(models.Model):

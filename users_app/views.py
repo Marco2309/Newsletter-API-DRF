@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.filter(is_administrador=False)
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
@@ -23,7 +23,7 @@ class UserViewSet(ModelViewSet):
 
 
 class AdminViewSet(ModelViewSet):
-    queryset = User.objects.filter(is_administrador=True)
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
@@ -43,7 +43,6 @@ class AdminViewSet(ModelViewSet):
 def verifyLogin(request):
     try:
         username = request.user
-        print(username)
         user = User.objects.get(username=username)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
