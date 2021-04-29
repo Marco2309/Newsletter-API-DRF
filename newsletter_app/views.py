@@ -1,16 +1,16 @@
-from newsletter_app.serializer import Newsletters, NewsletterSerializer, DetailNewsletterSerializer
+
+from newsletter_app.serializer import ViewNewsletterSerializer, CreateNewsletterSerializer, Newsletters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from tags_app.serializer import TagSerializer
 from rest_framework.response import Response
 from rest_framework import status
- 
 
 
 class NewslettersViewSet(ModelViewSet):
     queryset = Newsletters.objects.all()
-    serializer_class = NewsletterSerializer
+    serializer_class = ViewNewsletterSerializer
     permission_classes = (AllowAny,)
 
     @action(methods=['GET'], detail=True)

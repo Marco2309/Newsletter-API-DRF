@@ -1,24 +1,39 @@
 from rest_framework.serializers import ModelSerializer
-from users_app.models import User
+from django.contrib.auth.models import User, Group
+
+
+class GroupSerializer(ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('name',)
+
 
 class UserVerifySerializer(ModelSerializer):
+
+    groups = GroupSerializer(many=True)
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name',
-                  'last_name', 'is_active', 'is_administrador' )
+        # fields = '__all__'
+        fields = ('id', 'username', 'email', 'is_active', 'groups')
+
 
 class UserSerializer(ModelSerializer):
+
+    groups = GroupSerializer(many=True)
+
     class Meta:
         model = User
+        # fields = '__all__'
         fields = ('id', 'username', 'email', 'first_name',
-                  'last_name', 'is_active')
+                  'last_name', 'groups')
 
 
 class CreateUserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('password', 'last_login', 'username', 'first_name',
-                  'last_name', 'email', 'date_joined', 'is_active')
+                  'last_name', 'email', 'date_joined')
 
     def create(self, validated_data):
         user = User(
@@ -26,11 +41,11 @@ class CreateUserSerializer(ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            is_administrador=False,
             is_active=True
         )
         user.set_password(validated_data['password'])
         user.save()
+        user.groups.add(2)
         return user
 
 
@@ -46,9 +61,10 @@ class CreateAdminSerializer(ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            is_administrador=True,
             is_active=True
         )
         user.set_password(validated_data['password'])
         user.save()
+        user.groups.add(1)
+
         return user
