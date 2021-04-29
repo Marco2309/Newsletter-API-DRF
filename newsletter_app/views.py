@@ -45,16 +45,26 @@ class NewslettersViewSet(ModelViewSet):
 
     @action(methods=['PATCH'], detail=True)
     def vote(self, request, pk=None):
-        id = request.user.id
+        user = request.user
+        id = user.id
         newsletter = self.get_object()
+        votes = newsletter.voters.all()
+        if user in votes:
+            newsletter.voters.remove(id)
+            return Response(status=status.HTTP_200_OK, data={"vote": "remove"})
         newsletter.voters.add(id)
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK, data={"vote": "add"})
 
     @action(methods=['PATCH'], detail=True)
     def subscribe(self, request, pk=None):
-        id = request.user.id
+        user = request.user
+        id = user.id
         newsletter = self.get_object()
+        users = newsletter.users.all()
         if newsletter.target <= len(newsletter.voters.all()):
+            if user in users:
+                newsletter.users.remove(id)
+                return Response(status=status.HTTP_200_OK, data={"subscribe": "remove"})
             newsletter.users.add(id)
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
