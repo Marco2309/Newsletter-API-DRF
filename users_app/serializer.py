@@ -1,29 +1,39 @@
 from rest_framework.serializers import ModelSerializer
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+
+
+class GroupSerializer(ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('name',)
 
 
 class UserVerifySerializer(ModelSerializer):
+
+    groups = GroupSerializer(many=True)
+
     class Meta:
         model = User
-        fields = '__all__'
-        # fields = ('id', 'username', 'email', 'first_name',
-        #           'last_name', 'is_active', 'is_administrador' )
+        # fields = '__all__'
+        fields = ('id', 'username', 'email', 'is_active', 'groups')
 
 
 class UserSerializer(ModelSerializer):
+
+    groups = GroupSerializer(many=True)
+
     class Meta:
         model = User
-        fields = '__all__'
-        # fields = ('id', 'username', 'email', 'first_name',
-        #           'last_name', 'is_active')
+        # fields = '__all__'
+        fields = ('id', 'username', 'email', 'first_name',
+                  'last_name', 'groups')
 
 
 class CreateUserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
-        # fields = ('password', 'last_login', 'username', 'first_name',
-        #           'last_name', 'email', 'date_joined', 'is_active')
+        fields = ('password', 'last_login', 'username', 'first_name',
+                  'last_name', 'email', 'date_joined')
 
     def create(self, validated_data):
         user = User(
@@ -35,15 +45,15 @@ class CreateUserSerializer(ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        user.groups.add(2)
         return user
 
 
 class CreateAdminSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
-        # fields = ('password', 'last_login', 'username', 'first_name',
-        #           'last_name', 'email', 'date_joined')
+        fields = ('password', 'last_login', 'username', 'first_name',
+                  'last_name', 'email', 'date_joined')
 
     def create(self, validated_data):
         user = User(
@@ -55,4 +65,6 @@ class CreateAdminSerializer(ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        user.groups.add(1)
+
         return user
