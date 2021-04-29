@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from rest_framework.serializers import ModelSerializer
 from users_app.models import User
 
@@ -31,6 +32,13 @@ class CreateUserSerializer(ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        send_mail(
+            'Bienvenido al Sistema',
+            'Gracias por registrarte',
+            'hola@hotmail.com',
+            [validated_data['email']],
+            fail_silently=False
+        )
         return user
 
 

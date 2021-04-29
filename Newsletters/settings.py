@@ -143,3 +143,10 @@ REST_FRAMEWORK = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '2045505b0255c5'
+EMAIL_HOST_PASSWORD = '8a5df76668bbb4'
+EMAIL_PORT = '2525'
