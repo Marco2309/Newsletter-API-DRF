@@ -41,7 +41,6 @@ ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS', default=[]))
 INSTALLED_APPS = [
     'tags_app.apps.TagsAppConfig',
     'newsletter_app.apps.NewsletterAppConfig',
-    # 'users_app.apps.UsersAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

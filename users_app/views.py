@@ -18,16 +18,15 @@ class UserViewSet(ModelViewSet):
         return UserSerializer
 
     def get_permissions(self):
+        if self.request.method in ['POST']:
+            self.permission_classes = [AllowAny, ]
+            return super(UserViewSet, self).get_permissions()
         try:
             user = self.request.user
             admin = User.objects.get(
                 groups__name__in=['administrador'], id=user.id)
         except ObjectDoesNotExist:
             self.permission_classes = [NotPermissions, ]
-            return super(UserViewSet, self).get_permissions()
-
-        if self.request.method in ['POST']:
-            self.permission_classes = [AllowAny, ]
             return super(UserViewSet, self).get_permissions()
 
         if self.action == 'list' and not admin:
@@ -49,7 +48,6 @@ class AdminViewSet(ModelViewSet):
         try:
             user = self.request.user
             admin = user in self.queryset
-            print('admin', admin)
         except ObjectDoesNotExist:
             self.permission_classes = [NotPermissions, ]
             return super(AdminViewSet, self).get_permissions()
