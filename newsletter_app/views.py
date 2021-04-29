@@ -1,5 +1,5 @@
-
-from newsletter_app.serializer import ViewNewsletterSerializer, CreateNewsletterSerializer, Newsletters
+from newsletter_app.serializer import ViewNewsletterSerializer, CreateNewsletterSerializer, DetailNewsletterSerializer
+from newsletter_app.models import Newsletters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -24,4 +24,4 @@ class NewslettersViewSet(ModelViewSet):
     def get_serializer_class(self, *args, **kwargs):
         if self.action == 'retrieve':
             return DetailNewsletterSerializer
-        return NewsletterSerializer
+        return ViewNewsletterSerializer
