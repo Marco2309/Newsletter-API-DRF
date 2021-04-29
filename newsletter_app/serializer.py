@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from newsletter_app.models import Newsletters
-from tags_app.serializer import TagSerializer
-from users_app.serializer import UserSerializer
+from tags_app.serializer import TagForNewsletterSerializer
+from users_app.serializer import UserForNewsletterSerializer
 
 
 class ViewNewsletterSerializer(ModelSerializer):
@@ -10,7 +10,19 @@ class ViewNewsletterSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CreateNewsletterSerializer(ModelSerializer):
+class DetailNewsletterSerializer(ModelSerializer):
+    tags = TagForNewsletterSerializer(many=True)
+    users = UserForNewsletterSerializer(many=True)
+    members = UserForNewsletterSerializer(many=True)
+    voters = UserForNewsletterSerializer(many=True)
+
     class Meta:
         model = Newsletters
         fields = '__all__'
+
+
+class CreateNewsletterSerializer(ModelSerializer):
+    class Meta:
+        model = Newsletters
+        fields = ('nombre', 'description', 'frecuencia',
+                  'fecha_creacion', 'user', 'tags', 'target')

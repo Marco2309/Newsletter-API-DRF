@@ -6,3 +6,9 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
+
+class TagForNewsletterSerializer(ModelSerializer):
+  
+    class Meta:
+        model = Tag
+        fields = ('nombre',)

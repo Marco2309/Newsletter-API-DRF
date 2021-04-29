@@ -9,17 +9,15 @@ class GroupSerializer(ModelSerializer):
 
 
 class UserVerifySerializer(ModelSerializer):
-
     groups = GroupSerializer(many=True)
 
     class Meta:
         model = User
         # fields = '__all__'
-        fields = ('id', 'username', 'email', 'is_active', 'groups')
+        fields = ('id', 'username', 'is_active', 'groups')
 
 
 class UserSerializer(ModelSerializer):
-
     groups = GroupSerializer(many=True)
 
     class Meta:
@@ -66,5 +64,11 @@ class CreateAdminSerializer(ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         user.groups.add(1)
-
         return user
+
+
+class UserForNewsletterSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username',)
