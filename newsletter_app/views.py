@@ -1,4 +1,4 @@
-from newsletter_app.serializer import ViewNewsletterSerializer, CreateNewsletterSerializer, Newsletters, DetailNewsletterSerializer
+from newsletter_app.serializer import ViewNewsletterSerializer, CreateNewsletterSerializer, Newsletters, DetailNewsletterSerializer, InviteNewsletterSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from users_app.permissions import UserPermissions, NotPermissions
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,12 +8,21 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
 from rest_framework import status
+from django.core.mail import send_mail
 
 
 class NewslettersViewSet(ModelViewSet):
     queryset = Newsletters.objects.all()
     serializer_class = ViewNewsletterSerializer
     permission_classes = (AllowAny,)
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        var = serializer.save()
+        var.user = request.user
+        var.save()
+        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -33,7 +42,6 @@ class NewslettersViewSet(ModelViewSet):
 
         if self.request.method == 'PATCH':
             self.permission_classes = [IsAuthenticated, ]
-
         return super(NewslettersViewSet, self).get_permissions()
 
     @action(methods=['GET'], detail=True)
@@ -68,3 +76,34 @@ class NewslettersViewSet(ModelViewSet):
             newsletter.users.add(id)
             return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @action(methods=['PATCH'], detail=True)
+    def invite(self, request, pk=None):
+        user = request.user
+        newsletter = self.get_object()
+        admin = newsletter.user
+        serialized = InviteNewsletterSerializer(newsletter)
+        if admin == user:
+            id_guests = request.data['guests']
+            correos = []
+            for id_invited in id_guests:
+                try:
+                    invited = User.objects.get(groups__name__in=['administrador'], id=id_invited)
+                    newsletter.members.add(invited)
+                    correos.append(invited.email)
+                    serialized = InviteNewsletterSerializer(newsletter)
+                except ObjectDoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND,
+                                    data={
+                                        'user not found': id_invited,
+                                        'Newsletter': serialized.data
+                                    })
+            send_mail(
+                f'{user} te invito a editar',
+                f'{user} te invito a editar {newsletter.nombre}',
+                'newsletters@hotmail.com',
+                correos,
+                fail_silently=False
+            )
+            return Response(status=status.HTTP_200_OK, data=serialized.data)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)

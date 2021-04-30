@@ -25,4 +25,10 @@ class CreateNewsletterSerializer(ModelSerializer):
     class Meta:
         model = Newsletters
         fields = ('nombre', 'description', 'frecuencia',
-                  'fecha_creacion', 'user', 'tags', 'target')
+                  'fecha_creacion', 'tags', 'target')
+
+
+class InviteNewsletterSerializer(ModelSerializer):
+    class Meta:
+        model = Newsletters
+        fields = ('id', 'nombre', 'members')
