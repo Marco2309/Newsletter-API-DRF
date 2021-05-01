@@ -51,15 +51,6 @@ class NewslettersViewSet(ModelViewSet):
             self.permission_classes = [EditNewsletterPermissions, ]
         return super(NewslettersViewSet, self).get_permissions()
 
-    # def get_queryset(self):
-    #     tag = self.request.query_params.get('tag')
-    #     tag = Tag.objects.filter(nombre=tag)
-    #     if tag:
-    #         print(tag)
-    #         datos = self.queryset.filter(tags=tag)
-    #         return datos
-    #     return self.queryset
-
     @action(methods=['GET'], detail=True)
     def tags(self, request, pk=None):
         newsletter = self.get_object()
@@ -79,6 +70,26 @@ class NewslettersViewSet(ModelViewSet):
         newsletter.voters.add(id)
         return Response(status=status.HTTP_200_OK, data={"vote": "add"})
 
+    @action(methods=['GET'], detail=False)
+    def own(self, request):
+        id = request.user.id
+        newsletters = self.queryset.filter(user=id)
+        serialized = ViewNewsletterSerializer(newsletters, many=True)
+        print(newsletters)
+        return Response(status=status.HTTP_200_OK, data=serialized.data)
+
+    @action(methods=['GET'], detail=False)
+    def subscriptions(self, request):
+        try:
+            subscriptions = request.user.subscriptions.all()
+        except:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        # # newsletters = User.objects.filter(subscriptions__contains=id)
+        serialized = ViewNewsletterSerializer(subscriptions, many=True)
+        print(subscriptions)
+        # return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK, data=serialized.data)
+
     @action(methods=['PATCH'], detail=True)
     def subscribe(self, request, pk=None):
         user = request.user
@@ -91,7 +102,7 @@ class NewslettersViewSet(ModelViewSet):
                 return Response(status=status.HTTP_200_OK, data={"subscribe": "remove"})
             newsletter.users.add(id)
             return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data={'message': 'No ha alcanzado el target requerido'})
 
     @action(methods=['PATCH'], detail=True)
     def invite(self, request, pk=None):
@@ -124,7 +135,7 @@ class NewslettersViewSet(ModelViewSet):
             )
             return Response(status=status.HTTP_200_OK, data=serialized.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
+
     def tiempoEnvioMensual(self, email, tiempo):
 
         fecha_envio = datetime.now() + timedelta(days=tiempo)
@@ -150,4 +161,4 @@ class NewslettersViewSet(ModelViewSet):
         for user in newsletter.users.all():
             print(user.email)
             self.tiempoEnvioMensual(user.email, tiempo)
-        return Response(status = 200)
+        return Response(status=200)
