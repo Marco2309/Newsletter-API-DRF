@@ -85,7 +85,6 @@ class NewslettersViewSet(ModelViewSet):
             newsletter.users.add(id)
             return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-<<<<<<< HEAD
 
     @action(methods=['PATCH'], detail=True)
     def invite(self, request, pk=None):
@@ -118,7 +117,6 @@ class NewslettersViewSet(ModelViewSet):
             )
             return Response(status=status.HTTP_200_OK, data=serialized.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-=======
         
     def tiempoEnvioMensual(self, email, tiempo):
         
@@ -146,4 +144,3 @@ class NewslettersViewSet(ModelViewSet):
             print(user.email)
             self.tiempoEnvioMensual(user.email, tiempo)
         return Response(status = 200)
->>>>>>> juancorrea
