@@ -72,8 +72,9 @@ class NewslettersViewSet(ModelViewSet):
             return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
-    def tiempoEnvioMensual(self, email):
-            fecha_envio = datetime.now() + timedelta(days=30)
+    def tiempoEnvioMensual(self, email, tiempo):
+        
+            fecha_envio = datetime.now() + timedelta(days=tiempo)
             send_email_suscriptor.apply_async(
                 args=[email],
                 eta=fecha_envio
@@ -82,7 +83,18 @@ class NewslettersViewSet(ModelViewSet):
     @action(methods=['POST'], detail=True)
     def emails(self, request, pk=None):
         newsletter = self.get_object()
+        tiempo = newsletter.frecuencia
+        
+        if(tiempo == 'semanal'):
+            tiempo = 7
+        elif (tiempo == 'mensual'):
+            tiempo = 30
+        elif (tiempo == 'anual'):
+            tiempo = 365
+        else:
+            tiempo = 365
+        
         for user in newsletter.users.all():
             print(user.email)
-            self.tiempoEnvioMensual(user.email)
+            self.tiempoEnvioMensual(user.email, tiempo)
         return Response(status = 200)
