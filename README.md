@@ -30,33 +30,31 @@ Abre un consola que apunte l proyecto t realiza lo siguiente.
 		3. `DEBUG= Ture/False`
 		
 - Aplicar migraciones
-	```python
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
-```
+
+
+    	python manage.py makemigrations
+    	python manage.py migrate
+    	python manage.py runserver
+
 > Puedes detener el servidor con ctr + c
 
-- create un superusuario para las ultimas configuraciones
+- crea un superusuario para las ultimas configuraciones
 	En la consola con el servidor parado introduce el siguiente comando
 > 	python manage.py createsuperuser
 	e introduce tu username, email y password
-	
+
 - Pon en marcha el servidor y crea 2 grupos en el admin de Django:
 
 
-    	python manage.py runserver
-    	 accede a admin ej. http://127.0.0.1:8000/admin/
-    	 Da click en add Group
-    	 como nombre al primer grupo es 'administrador'
-    	 guardalo y agrega otro que tenga como nombre 'usuario' y guardalo
-		 
+        	python manage.py runserver
+        	 accede a admin ej. http://127.0.0.1:8000/admin/
+        	 Da click en add Group
+        	 como nombre al primer grupo es 'administrador'
+        	 guardalo y agrega otro que tenga como nombre 'usuario' y guardalo
+
  - Para ver la documetacin accede a 
 `	http://127.0.0.1:8000/swagger/
 	o
 	http://127.0.0.1:8000/redoc/`
 
 ### Gracias por checar nuestro proyecto :D
-
-
-
