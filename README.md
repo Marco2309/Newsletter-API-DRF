@@ -6,7 +6,7 @@ con 3 forma de uso:
 3. Admin: puede crear boletines y puede invitar o ser invitado para editar otros boletines
 
 ## Requisitos
-Python 3.8
+Python 3.8 % 
 PIP
 
 ## Instalación
