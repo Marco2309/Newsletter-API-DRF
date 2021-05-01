@@ -8,6 +8,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
 from rest_framework import status
+from newsletter_app.tasks import send_email_suscriptor
+from datetime import timedelta
+from datetime import datetime, timezone
 
 
 class NewslettersViewSet(ModelViewSet):
@@ -68,3 +71,18 @@ class NewslettersViewSet(ModelViewSet):
             newsletter.users.add(id)
             return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        
+    def tiempoEnvioMensual(self, email):
+            fecha_envio = datetime.now() + timedelta(days=30)
+            send_email_suscriptor.apply_async(
+                args=[email],
+                eta=fecha_envio
+            )
+            
+    @action(methods=['POST'], detail=True)
+    def emails(self, request, pk=None):
+        newsletter = self.get_object()
+        for user in newsletter.users.all():
+            print(user.email)
+            self.tiempoEnvioMensual(user.email)
+        return Response(status = 200)
