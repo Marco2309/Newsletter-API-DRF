@@ -13,7 +13,7 @@ PIP
 Descarge o clone el repositorio, si decidió el método por descarga también deberá
 descomprimir el proyecto.
 
-Abre un consola que apunte l proyecto t realiza lo siguiente.
+Abre un consola que apunte al proyecto y realiza lo siguiente.
 - Crear entorno virtual ***`python3 -m venv env`***
 
 - Activar entorno virtual 
@@ -21,7 +21,7 @@ Abre un consola que apunte l proyecto t realiza lo siguiente.
 	* Windows ***`env/bin/activate`***
 
 - Instalar dependencias
-	* python -m pip install -r requirements.txt
+	* ***`python -m pip install -r requirements.txt***
 	
 - variables de entorno
 	* crea un archivo `.env` para las varibles de entorno en la carpeta Newsletter con los siguiente campos
@@ -47,10 +47,9 @@ Abre un consola que apunte l proyecto t realiza lo siguiente.
 
 
         	python manage.py runserver
-        	 accede a admin ej. http://127.0.0.1:8000/admin/
-        	 Da click en add Group
-        	 como nombre al primer grupo es 'administrador'
-        	 guardalo y agrega otro que tenga como nombre 'usuario' y guardalo
+        	accede a admin ej. http://127.0.0.1:8000/admin/
+        	Da click en add Group, como nombre al primer grupo es 'administrador'
+        	guardalo y agrega otro que tenga como nombre 'usuario' y guardalo
 
  - Para ver la documetacin accede a 
 `	http://127.0.0.1:8000/swagger/
