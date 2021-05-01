@@ -124,7 +124,7 @@ class NewslettersViewSet(ModelViewSet):
             )
             return Response(status=status.HTTP_200_OK, data=serialized.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
+        
     def tiempoEnvioMensual(self, email, tiempo):
 
         fecha_envio = datetime.now() + timedelta(days=tiempo)
@@ -150,4 +150,4 @@ class NewslettersViewSet(ModelViewSet):
         for user in newsletter.users.all():
             print(user.email)
             self.tiempoEnvioMensual(user.email, tiempo)
-        return Response(status=200)
+        return Response(status = 200)
