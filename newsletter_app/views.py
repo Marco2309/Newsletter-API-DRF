@@ -1,6 +1,7 @@
 from newsletter_app.serializer import ViewNewsletterSerializer, CreateNewsletterSerializer, Newsletters, DetailNewsletterSerializer, InviteNewsletterSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from users_app.permissions import UserPermissions, NotPermissions
+from newsletter_app.permissions import EditNewsletterPermissions
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.viewsets import ModelViewSet
 from tags_app.serializer import TagSerializer
@@ -27,12 +28,12 @@ class NewslettersViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return DetailNewsletterSerializer
-        if self.request.method == 'POST':
+        if self.request.method in ['POST', 'PUT']:
             return CreateNewsletterSerializer
         return ViewNewsletterSerializer
 
     def get_permissions(self):
-        if self.request.method in ['POST', 'PUT', 'DELETE']:
+        if self.request.method == 'POST':
             try:
                 user = self.request.user
                 admin = User.objects.get(
@@ -42,6 +43,8 @@ class NewslettersViewSet(ModelViewSet):
 
         if self.request.method == 'PATCH':
             self.permission_classes = [IsAuthenticated, ]
+        if self.request.method in ['PUT', 'DELETE']:
+            self.permission_classes = [EditNewsletterPermissions, ]
         return super(NewslettersViewSet, self).get_permissions()
 
     @action(methods=['GET'], detail=True)
@@ -88,7 +91,8 @@ class NewslettersViewSet(ModelViewSet):
             correos = []
             for id_invited in id_guests:
                 try:
-                    invited = User.objects.get(groups__name__in=['administrador'], id=id_invited)
+                    invited = User.objects.get(
+                        groups__name__in=['administrador'], id=id_invited)
                     newsletter.members.add(invited)
                     correos.append(invited.email)
                     serialized = InviteNewsletterSerializer(newsletter)
