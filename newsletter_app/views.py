@@ -9,7 +9,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
 from rest_framework import status
+<<<<<<< HEAD
 from django.core.mail import send_mail
+=======
+from newsletter_app.tasks import send_email_suscriptor
+from datetime import timedelta
+from datetime import datetime, timezone
+>>>>>>> juancorrea
 
 
 class NewslettersViewSet(ModelViewSet):
@@ -79,6 +85,7 @@ class NewslettersViewSet(ModelViewSet):
             newsletter.users.add(id)
             return Response(status=status.HTTP_200_OK, data={"subscribe": "add"})
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+<<<<<<< HEAD
 
     @action(methods=['PATCH'], detail=True)
     def invite(self, request, pk=None):
@@ -111,3 +118,32 @@ class NewslettersViewSet(ModelViewSet):
             )
             return Response(status=status.HTTP_200_OK, data=serialized.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+=======
+        
+    def tiempoEnvioMensual(self, email, tiempo):
+        
+            fecha_envio = datetime.now() + timedelta(days=tiempo)
+            send_email_suscriptor.apply_async(
+                args=[email],
+                eta=fecha_envio
+            )
+            
+    @action(methods=['POST'], detail=True)
+    def emails(self, request, pk=None):
+        newsletter = self.get_object()
+        tiempo = newsletter.frecuencia
+        
+        if(tiempo == 'semanal'):
+            tiempo = 7
+        elif (tiempo == 'mensual'):
+            tiempo = 30
+        elif (tiempo == 'anual'):
+            tiempo = 365
+        else:
+            tiempo = 365
+        
+        for user in newsletter.users.all():
+            print(user.email)
+            self.tiempoEnvioMensual(user.email, tiempo)
+        return Response(status = 200)
+>>>>>>> juancorrea
