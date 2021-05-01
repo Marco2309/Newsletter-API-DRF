@@ -2,7 +2,6 @@ from rest_framework.test import APITestCase
 from newsletter_app.models import Newsletters
 from tags_app.models import Tag
 from django.contrib.auth.models import User, Group
-from rest_framework.test import force_authenticate
 
 class TestNewsLetter(APITestCase):
     
@@ -29,7 +28,6 @@ class TestNewsLetter(APITestCase):
             'username': 'user',
             'password': 'test'
         })
-        print(response.data, 'hoolaaaa')
         self.auth = f'Bearer {response.data["access"]}'
         
         self.newsletter = Newsletters.objects.create(
@@ -64,52 +62,30 @@ class TestNewsLetter(APITestCase):
             'voters': [self.user.id]
         }
         response = self.client.post(f'{self.host}/newsletter/', data, HTTP_AUTHORIZATION=self.auth)
-        print(response.data, 'nuevo token*******')
-        print(self.auth)
         self.assertEqual(response.status_code, 201, response.data)
         self.assertEqual(Newsletters.objects.all().count(), 2)
         self.assertEqual(Newsletters.objects.get(id=self.newsletter.id).nombre, 'newsletter 1')
-        self.assertEqual(len(response.data), 7)
-        
-     
-    
-    # def test_post_logIn_authenticated(self):
-    #     data = {
-    #         'nombre' : 'newsletter 3',
-    #         'description' : 'description 3',
-    #         'target': 3,
-    #         'frecuencia' : 'frecuencia 3',
-    #         'tags' : [self.tag.id],
-    #         'fecha_creacion' : '2020-04-06',
-    #         'user': self.user.id,
-    #         'users': [self.user.id],
-    #         'members': [self.user.id],
-    #         'voters': [self.user.id]
-    #     }
-    #     self.client.force_authenticate(self.user)
-    #     response = self.client.post(f'{self.host}/newsletter/', data)
-    #     self.assertEqual(response.status_code, 201)
         
     
-    # def test_put_newsletter(self):
-    #     data = {
-    #         'nombre' : 'newsletter actualizado',
-    #         'description' : 'description actualizado',
-    #         'target': 1,
-    #         'frecuencia' : 'frecuencia actualizado',
-    #         'tags' : [self.tag.id],
-    #         'fecha_creacion' : '2020-04-06',
-    #         'user': self.user.id,
-    #         'users': [self.user.id],
-    #         'members': [self.user.id],
-    #         'voters': [self.user.id]
-    #     }
-    #     nombre_newsletter = Newsletters.objects.get(id=self.newsletter.id).nombre
-    #     response = self.client.put(f'{self.host}/newsletter/{self.newsletter.id}/',data)
-    #     self.assertEqual(response.status_code, 200, response.data)
-    #     self.assertNotEqual(nombre_newsletter, data['nombre'])
+    def test_put_newsletter(self):
+        data = {
+            'nombre' : 'newsletter actualizado',
+            'description' : 'description actualizado',
+            'target': 1,
+            'frecuencia' : 'frecuencia actualizado',
+            'tags' : [self.tag.id],
+            'fecha_creacion' : '2020-04-06',
+            'user': self.user.id,
+            'users': [self.user.id],
+            'members': [self.user.id],
+            'voters': [self.user.id]
+        }
+        nombre_newsletter = Newsletters.objects.get(id=self.newsletter.id).nombre
+        response = self.client.put(f'{self.host}/newsletter/{self.newsletter.id}/',data, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertNotEqual(nombre_newsletter, data['nombre'])
         
-    # def test_delete_newsletter(self):
-    #     response = self.client.delete(f'{self.host}/newsletter/{self.newsletter.id}/', HTTP_AUTHORIZATION=self.auth)
-    #     self.assertEqual(response.status_code, 204)
-    #     self.assertEqual(len(Newsletters.objects.all()), 0)
+    def test_delete_newsletter(self):
+        response = self.client.delete(f'{self.host}/newsletter/{self.newsletter.id}/', HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(len(Newsletters.objects.all()), 0)
