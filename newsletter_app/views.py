@@ -51,24 +51,20 @@ class NewslettersViewSet(ModelViewSet):
             self.permission_classes = [EditNewsletterPermissions, ]
         return super(NewslettersViewSet, self).get_permissions()
 
+    def get_queryset(self):
+        filtro = self.request.query_params.get('tag')
+        if filtro:
+            newsletterValid = self.queryset.filter(
+                tags__nombre__contains=filtro)
+            return newsletterValid
+        return self.queryset
+
     @action(methods=['GET'], detail=True)
     def tags(self, request, pk=None):
         newsletter = self.get_object()
         tags = newsletter.tags.all()
         serialized = TagSerializer(tags, many=True)
         return Response(status=status.HTTP_200_OK, data=serialized.data)
-
-    @action(methods=['PATCH'], detail=True)
-    def vote(self, request, pk=None):
-        user = request.user
-        id = user.id
-        newsletter = self.get_object()
-        votes = newsletter.voters.all()
-        if user in votes:
-            newsletter.voters.remove(id)
-            return Response(status=status.HTTP_200_OK, data={"vote": "remove"})
-        newsletter.voters.add(id)
-        return Response(status=status.HTTP_200_OK, data={"vote": "add"})
 
     @action(methods=['GET'], detail=False)
     def own(self, request):
@@ -89,6 +85,18 @@ class NewslettersViewSet(ModelViewSet):
         print(subscriptions)
         # return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_200_OK, data=serialized.data)
+
+    @action(methods=['PATCH'], detail=True)
+    def vote(self, request, pk=None):
+        user = request.user
+        id = user.id
+        newsletter = self.get_object()
+        votes = newsletter.voters.all()
+        if user in votes:
+            newsletter.voters.remove(id)
+            return Response(status=status.HTTP_200_OK, data={"vote": "remove"})
+        newsletter.voters.add(id)
+        return Response(status=status.HTTP_200_OK, data={"vote": "add"})
 
     @action(methods=['PATCH'], detail=True)
     def subscribe(self, request, pk=None):
