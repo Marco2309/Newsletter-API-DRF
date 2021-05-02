@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from users_app.models import CustomUser
 
 
 class TestLoginRegister(APITestCase):
@@ -12,13 +13,13 @@ class TestLoginRegister(APITestCase):
         self.groups_usuario = Group.objects.create(
             name='usuario'
         )
-        self.user = User.objects.create_user(
+        self.user = CustomUser.objects.create_user(
             username='user',
             email='user@mail.com',
             password='test',
         )
         self.user.groups.add(self.groups_usuario)
-        self.admin = User.objects.create_user(
+        self.admin = CustomUser.objects.create_user(
             username='admin',
             email='admin@mail.com',
             password='test',
