@@ -14,7 +14,7 @@ class TagsViewSet(ModelViewSet):
         if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
             try:
                 user = self.request.user
-                admin = User.objects.get(
+                admin = CustomUser.objects.get(
                     groups__name__in=['administrador'], id=user.id)
             except ObjectDoesNotExist:
                 self.permission_classes = [NotPermissions, ]
