@@ -3,8 +3,7 @@ from tags_app.serializer import Tag, TagSerializer
 from rest_framework.permissions import AllowAny
 from users_app.permissions import NotPermissions
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
-
+from users_app.models import CustomUser
 
 class TagsViewSet(ModelViewSet):
     queryset = Tag.objects.all()

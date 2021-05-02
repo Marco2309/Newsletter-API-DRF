@@ -1,7 +1,6 @@
 from django.db import models
 from tags_app.models import Tag
-from django.contrib.auth.models import User
-
+from users_app.models import CustomUser
 
 class Newsletters(models.Model):
     nombre = models.CharField(max_length=50)
@@ -11,10 +10,10 @@ class Newsletters(models.Model):
     frecuencia = models.CharField(max_length=50)
     tags = models.ManyToManyField(Tag, related_name='newsletters')
     user = models.ForeignKey(
-        User, related_name='newsletters', on_delete=models.SET_NULL, null=True)
-    users = models.ManyToManyField(User, related_name='subscriptions')
-    members = models.ManyToManyField(User, related_name='editable')
-    voters = models.ManyToManyField(User, related_name='voted')
+        CustomUser, related_name='newsletters', on_delete=models.SET_NULL, null=True)
+    users = models.ManyToManyField(CustomUser, related_name='subscriptions')
+    members = models.ManyToManyField(CustomUser, related_name='editable')
+    voters = models.ManyToManyField(CustomUser, related_name='voted')
     fecha_creacion = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now_add=True)

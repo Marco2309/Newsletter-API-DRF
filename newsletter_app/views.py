@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from tags_app.serializer import TagSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.contrib.auth.models import User
+from users_app.models import CustomUser
 from rest_framework import status
 from django.core.mail import send_mail
 from newsletter_app.tasks import send_email_suscriptor
@@ -40,7 +40,7 @@ class NewslettersViewSet(ModelViewSet):
         if self.request.method == 'POST':
             try:
                 user = self.request.user
-                admin = User.objects.get(
+                admin = CustomUser.objects.get(
                     groups__name__in=['administrador'], id=user.id)
             except ObjectDoesNotExist:
                 self.permission_classes = [NotPermissions, ]
@@ -80,10 +80,7 @@ class NewslettersViewSet(ModelViewSet):
             subscriptions = request.user.subscriptions.all()
         except:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        # # newsletters = User.objects.filter(subscriptions__contains=id)
         serialized = ViewNewsletterSerializer(subscriptions, many=True)
-        print(subscriptions)
-        # return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_200_OK, data=serialized.data)
 
     @action(methods=['PATCH'], detail=True)
@@ -123,7 +120,7 @@ class NewslettersViewSet(ModelViewSet):
             correos = []
             for id_invited in id_guests:
                 try:
-                    invited = User.objects.get(
+                    invited = CustomUser.objects.get(
                         groups__name__in=['administrador'], id=id_invited)
                     newsletter.members.add(invited)
                     correos.append(invited.email)

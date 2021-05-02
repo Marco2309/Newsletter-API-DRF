@@ -1,4 +1,4 @@
-from users_app.serializer import UserSerializer, CreateUserSerializer, User, CreateAdminSerializer, UserVerifySerializer, Group
+from users_app.serializer import UserSerializer, CreateUserSerializer, CustomUser, CreateAdminSerializer, UserVerifySerializer, Group
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
@@ -9,7 +9,7 @@ from users_app.permissions import UserPermissions, NotPermissions
 
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.filter(groups__name__in=['usuario'])
+    queryset = CustomUser.objects.filter(groups__name__in=['usuario'])
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
@@ -23,7 +23,7 @@ class UserViewSet(ModelViewSet):
             return super(UserViewSet, self).get_permissions()
         try:
             user = self.request.user
-            admin = User.objects.get(
+            admin = CustomUser.objects.get(
                 groups__name__in=['administrador'], id=user.id)
         except ObjectDoesNotExist:
             self.permission_classes = [NotPermissions, ]
@@ -36,7 +36,7 @@ class UserViewSet(ModelViewSet):
 
 
 class AdminViewSet(ModelViewSet):
-    queryset = User.objects.filter(groups__name__in=['administrador'])
+    queryset = CustomUser.objects.filter(groups__name__in=['administrador'])
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
@@ -66,7 +66,7 @@ class AdminViewSet(ModelViewSet):
 def verifyLogin(request):
     try:
         username = request.user
-        user = User.objects.get(username=username)
+        user = CustomUser.objects.get(username=username)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
