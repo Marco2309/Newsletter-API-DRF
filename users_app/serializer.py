@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from rest_framework.serializers import ModelSerializer
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from users_app.models import CustomUser
 
 
 class GroupSerializer(ModelSerializer):
@@ -13,7 +14,7 @@ class UserVerifySerializer(ModelSerializer):
     groups = GroupSerializer(many=True)
 
     class Meta:
-        model = User
+        model = CustomUser
         # fields = '__all__'
         fields = ('id', 'username', 'is_active', 'groups')
 
@@ -22,7 +23,7 @@ class UserSerializer(ModelSerializer):
     groups = GroupSerializer(many=True)
 
     class Meta:
-        model = User
+        model = CustomUser
         # fields = '__all__'
         fields = ('id', 'username', 'email', 'first_name',
                   'last_name', 'groups')
@@ -30,12 +31,12 @@ class UserSerializer(ModelSerializer):
 
 class CreateUserSerializer(ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('password', 'last_login', 'username', 'first_name',
                   'last_name', 'email', 'date_joined')
 
     def create(self, validated_data):
-        user = User(
+        user = CustomUser(
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
@@ -57,12 +58,12 @@ class CreateUserSerializer(ModelSerializer):
 
 class CreateAdminSerializer(ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('password', 'last_login', 'username', 'first_name',
                   'last_name', 'email', 'date_joined')
 
     def create(self, validated_data):
-        user = User(
+        user = CustomUser(
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
@@ -78,5 +79,5 @@ class CreateAdminSerializer(ModelSerializer):
 class UserForNewsletterSerializer(ModelSerializer):
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username',)

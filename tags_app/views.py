@@ -3,8 +3,7 @@ from tags_app.serializer import Tag, TagSerializer
 from rest_framework.permissions import AllowAny
 from users_app.permissions import NotPermissions
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
-
+from users_app.models import CustomUser
 
 class TagsViewSet(ModelViewSet):
     queryset = Tag.objects.all()
@@ -15,7 +14,7 @@ class TagsViewSet(ModelViewSet):
         if self.request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
             try:
                 user = self.request.user
-                admin = User.objects.get(
+                admin = CustomUser.objects.get(
                     groups__name__in=['administrador'], id=user.id)
             except ObjectDoesNotExist:
                 self.permission_classes = [NotPermissions, ]

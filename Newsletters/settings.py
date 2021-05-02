@@ -39,6 +39,7 @@ ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS', default=[]))
 # Application definition
 
 INSTALLED_APPS = [
+    'users_app.apps.UsersAppConfig',
     'tags_app.apps.TagsAppConfig',
     'newsletter_app.apps.NewsletterAppConfig',
     'django.contrib.admin',
@@ -181,3 +182,4 @@ EMAIL_HOST_PASSWORD = '8a5df76668bbb4'
 EMAIL_PORT = '2525'
 
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+AUTH_USER_MODEL="users_app.CustomUser"

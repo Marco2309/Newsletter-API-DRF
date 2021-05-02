@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 from tags_app.models import Tag
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from users_app.models import CustomUser
 
 class TestTags(APITestCase):
     
@@ -17,7 +18,7 @@ class TestTags(APITestCase):
         self.groups_usuario = Group.objects.create(
             name = 'usuario'
         )
-        self.user = User.objects.create_user(
+        self.user = CustomUser.objects.create_user(
             username='user',
             email = 'prueba@mail.com',
             password = 'test',
